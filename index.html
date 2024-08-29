@@ -1,53 +1,84 @@
-import os
-from flask import Flask, request, render_template
-import openai
-from dotenv import load_dotenv
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vodafone Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-# Load environment variables from .env file
-load_dotenv()
+        .chat-container {
+            width: 400px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
 
-# Initialize OpenAI API key
-openai.api_key = os.getenv("OPENAI_API_KEY")
+        h1 {
+            text-align: center;
+            color: #333;
+        }
 
-# Initialize Flask app
-server = Flask(__name__)
+        label {
+            font-weight: bold;
+        }
 
-# Define system prompt
-system_prompt = (
-    """You are a friendly customer service chatbot for Vodafone/ziggo.
-    I want you to find the answer on their website: [Vodafone](https://www.vodafoneziggo.nl/).
-    Try to help the customer solve their problem online as much as possible.
-    At first, greet the customer and ask how you can help.
-    After that, greet the customer by name, then say hi and welcome to Vodafone/Ziggo.
-    Try to help the customer solve their problem online as much as possible.
-    Wish the customer a good day."""
-)
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
 
-# Function to send a prompt to GPT
-def send_gpt(prompt):
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Or "gpt-4" if you have access
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0
-        )
-        response_message = response['choices'][0]['message']['content']
-        return response_message
-    except Exception as e:
-        return str(e)
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-# Define Flask route
-@server.route('/', methods=['GET', 'POST'])
-def chat():
-    if request.method == 'POST':
-        question = request.form['question']
-        response = send_gpt(question)
-        return render_template('index.html', res=response)
-    return render_template('index.html')
+        button:hover {
+            background-color: #0056b3;
+        }
 
-# Run the Flask server
-if __name__ == '__main__':
-    server.run(debug=True, host='0.0.0.0', port=5000)
+        .response-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Vodafone Chatbot</h1>
+        <form method="POST" action="/">
+            <label for="question">Ask the chatbot:</label>
+            <input type="text" id="question" name="question" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+
+        {% if res %}
+        <div class="response-container">
+            <h3>Chatbot Response:</h3>
+            <p>{{ res }}</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
