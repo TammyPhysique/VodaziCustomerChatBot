@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, render_template
 import openai
 from dotenv import load_dotenv
 
@@ -45,8 +45,8 @@ def chat():
     if request.method == 'POST':
         question = request.form['question']
         response = send_gpt(question)
-        return send_from_directory('.', 'index.html', res=response)
-    return send_from_directory('.', 'index.html')
+        return render_template('index.html', res=response)
+    return render_template('index.html')
 
 # Run the Flask server
 if __name__ == '__main__':
