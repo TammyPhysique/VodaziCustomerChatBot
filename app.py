@@ -45,8 +45,9 @@ def chat():
     if request.method == 'POST':
         question = request.form['question']
         response = send_gpt(question)
-        return render_template('index.html', res=response)
-    return render_template('index.html')
+         return send_from_directory('.', 'index.html', res=response)
+    return send_from_directory('.', 'index.html')
+
 
 # Run the Flask server
 if __name__ == '__main__':
