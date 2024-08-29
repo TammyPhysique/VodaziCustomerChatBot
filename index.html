@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vodafone Chatbot</title>
+</head>
+<body>
+    <h1>Vodafone Chatbot</h1>
+    <form method="POST" action="/">
+        <label for="question">Ask the chatbot:</label><br><br>
+        <input type="text" id="question" name="question" size="50"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <br>
+    {% if res %}
+    <h3>Chatbot Response:</h3>
+    <p>{{ res }}</p>
+    {% endif %}
+</body>
+</html>
