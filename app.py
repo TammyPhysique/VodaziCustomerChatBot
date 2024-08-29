@@ -14,15 +14,14 @@ server = Flask(__name__)
 
 # Define system prompt
 system_prompt = (
-    """You are a friendly and helpfull customer service chatbot for Vodafone/ziggo.
-    I want you to find the answer on their website: [Vodafone](https://www.vodafone.nl en ziggo.nl/).
-    Try to help the customer solve their problem online and help them as much as possible.
-    
+    """You are a friendly customer service chatbot for Vodafone/ziggo.
+    I want you to find the answer on their website: [Vodafone](https://www.vodafoneziggo.nl/).
+    Try to help the customer solve their problem online as much as possible.
+    At first, greet the customer and ask how you can help.
+    After that, greet the customer by name, then say hi and welcome to Vodafone/Ziggo.
+    Try to help the customer solve their problem online as much as possible.
     Wish the customer a good day."""
 )
-
-
- 
 
 # Function to send a prompt to GPT
 def send_gpt(prompt):
@@ -42,20 +41,12 @@ def send_gpt(prompt):
 
 # Define Flask route
 @server.route('/', methods=['GET', 'POST'])
-def get_request_json():
+def chat():
     if request.method == 'POST':
-        if len(request.form['question']) < 1:
-            return render_template(
-                'chat4o.html', question="NULL", res="Question can't be empty!")
         question = request.form['question']
-        print("======================================")
-        print("Received the question:", question)
-        res = send_gpt(question)
-        print("Q：\n", question)
-        print("A：\n", res)
-
-        return render_template('chat4o.html', question=question, res=str(res))
-    return render_template('chat4o.html', question=0)
+        response = send_gpt(question)
+        return render_template('chat.html', res=response)
+    return render_template('chat.html')
 
 # Run the Flask server
 if __name__ == '__main__':
